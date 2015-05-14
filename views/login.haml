@@ -1,0 +1,12 @@
+.container
+  %form.form-signin{action: '/login', method: 'post'}
+    %h2.form-signin-heading Welcome! Please Login to YomiYomi Reader
+    %label.sr-only{for: 'inputemail'}UserID(E-mail form)
+    %input.form-control#email{name: 'email', type: 'email',placeholder: 'Email Address'}
+    %label.sr-only{for: 'inputpassword'}Password
+    %input.form-control#password{name: 'password', type: 'password',placeholder: 'Password'}
+    %button.btn.btn-lg.btn-primary.btn-block{type: 'submit', value: 'Login'} Sign in!
+    
+  %a{href: '/signup'}
+    %button.btn.btn-lg.btn-block#btn-signup Sign up!
+

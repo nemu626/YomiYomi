@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+.container-fluid{style:"background:#222222;height:100%"}
+  .row
+    .col-md-2
+      #sidebar-wrapper
+        %ul.sidebar-nav#sidemenu
+          %li.sidebar-brand
+            %h3 YomiYomi Feeder
+            %li
+              %span.glyphicon.glyphicon-home{:style =>'color:white'}
+              %a{:href => '/all' } ALL
+              %span.glyphicon.glyphicon-chevron-right{style: 'color:white'}
+
+          - @categories.each do |category|
+            %li
+              %a{href:'#category_feeds' + category.id.to_s, data: {toggle: "collapse", target: '#category_feeds' + category.id.to_s, parent: 'sidemenu'}}
+                .glyphicon.glyphicon-signal{style: 'color:white'}
+                = category.name
+                %span.glyphicon.glyphicon-chevron-down{style: 'color:white'}
+
+            - unless category.feeds.blank?
+              .sublinks.collapse{id: 'category_feeds' + category.id.to_s}
+                - category.feeds.each do |feed|
+                  %a.list-group-item.small{href: '/feed/' + feed.id.to_s}
+                    = feed.name
+                    %span.glyphicon.glyphicon-chevron-right.pull-right{:style => 'color:black'}
+          %li
+            %span.glyphicon.glyphicon-star{style: 'color:white'}
+            %a{href: '/favorite'}
+              Favorite            
+          %li
+            %p " "
+          %li
+            %span.glyphicon.glyphicon-plus{style: 'color:white'}
+            %a{href: '#add_category', data: {toggle: "modal",target:'#add_category'}}
+              Add Category
+          %li
+            %span.glyphicon.glyphicon-plus{style: 'color:white'}
+            %a{href: '#add_feed',data: {toggle: "modal"}}
+              Add Feed
+          %li
+            %span.glyphicon.glyphicon-remove{style: 'color:white'}
+            %a{href: '#remove_category',data: {toggle: "modal"}}
+              Remove Category
+          %li
+            %span.glyphicon.glyphicon-remove{style: 'color:white'}
+            %a{href: '#remove_feed',data: {toggle: "modal"}}
+              Remove Feed
+          %li
+            %span.glyphicon.glyphicon-random{style: 'color:white'}
+            %a{href: '#move_feed',data: {toggle: "modal"}}
+              Move Feed
+          %li
+            %span.glyphicon.glyphicon-log-out{style: 'color:white'}
+            %a{href: '/logout'}
+              Log out
+          %li
+            %span.glyphicon.glyphicon-info-sign{style: 'color:white'}
+            %a{href: '/about'}
+              About YomiYomi...
+
+
+
+    /Main Body( Entries)
+    .col-md-10
+      #page-content-wrapper
+        .container-fluid
+          .row
+            .col-md-12
+              - if @entries.empty?
+                %p=@page_title + "に記事がありません"
+              - else
+                %a{href: '/refresh'}
+                  %h2= @page_title
+                .entry_cell
+                  %ul
+                    - @entries.each do |entry|
+                      %li
+                        %nobr
+                          %a{href: "#{entry.url}", target: '_blank'}
+                            = entry.title
+                          %a#span_a{href: '/add_favorite/'+entry.id.to_s}
+                            -if entry.favorite?
+                              %span.glyphicon.glyphicon-star.pull-right
+                            -else
+                              %span.glyphicon.glyphicon-star-empty.pull-right
+
+
+                        %p
+                          = entry.summary
+
+
+
+
+
+
+/ MODAL : Add Category
+#add_category.modal.fade{aria: {hidden: "true", labelledby: "myModalLabel"}, :role => "dialog", :tabindex => "-1"}
+  .modal-dialog
+    .modal-content
+      %form.form{action: '/post_category',method: 'POST'}
+        .modal-header
+          %button.close{aria: {label: "Close"},data: {dismiss: "modal"}, type: "button"}
+            %span{aria: {hidden: "true"}} ×
+          %h4#myModalLabel.modal-title Add Category.
+        .modal-body
+          %label.sr-only{for: 'inputText'}Category
+          %input.form-control#name{name: 'category', type: 'text',placeholder: 'Category Name'}
+        .modal-footer
+          %button.btn.btn-default{data: {dismiss: "modal"}, :type => "button"} Close
+          %button.btn.btn-primary{:type => "submit"} Add!
+/Modal : Add Feed
+#add_feed.modal.fade{aria: {hidden: "true", labelledby: "myModalLabel"}, :role => "dialog", :tabindex => "-1"}
+  .modal-dialog
+    .modal-content
+      %form.form{action: '/post_feed',method: 'POST'}
+        .modal-header
+          %button.close{aria: {label: "Close"},data: {dismiss: "modal"}, type: "button"}
+            %span{aria: {hidden: "true"}} ×
+          %h4#myModalLabel.modal-title Add Feed.
+        .modal-body
+          %select.form-control{name: 'category_id'}
+            - @categories.each do |category|
+              %option{value: category.id}
+                =category.name
+          %label.sr-only{for: 'inputText'}Feed URL
+          %input.form-control#name{name: 'feed_url', type: 'text',placeholder: 'Feed URL(address of xml)'}
+        .modal-footer
+          %button.btn.btn-default{data: {dismiss: "modal"}, :type => "button"} Close
+          %button.btn.btn-primary{:type => "submit"} Add!
+/Modal : Remove Category
+#remove_category.modal.fade{aria: {hidden: "true", labelledby: "myModalLabel"}, :role => "dialog", :tabindex => "-1"}
+  .modal-dialog
+    .modal-content
+      %form.form{action: '/remove_category',method: 'POST'}
+        .modal-header
+          %button.close{aria: {label: "Close"},data: {dismiss: "modal"}, type: "button"}
+            %span{aria: {hidden: "true"}} ×
+          %h4#myModalLabel.modal-title Remove Category.
+        .modal-body
+          %select.form-control{name: 'category_id'}
+            - @categories.each do |category|
+              - unless category.name == "Uncategorized"
+                %option{value: category.id}
+                  =category.name          
+        .modal-footer
+          %button.btn.btn-default{data: {dismiss: "modal"}, :type => "button"} Close
+          %button.btn.btn-primary{:type => "submit"} Remove!
+/Modal : Remove Feed
+#remove_feed.modal.fade{aria: {hidden: "true", labelledby: "myModalLabel"}, :role => "dialog", :tabindex => "-1"}
+  .modal-dialog
+    .modal-content
+      %form.form{action: '/remove_feed',method: 'POST'}
+        .modal-header
+          %button.close{aria: {label: "Close"},data: {dismiss: "modal"}, type: "button"}
+            %span{aria: {hidden: "true"}} ×
+          %h4#myModalLabel.modal-title Remove Feed.
+        .modal-body
+          %select.form-control{name: 'feed_id'}
+            - @categories.each do |category|
+              - category.feeds.each do|feed|
+                %option{value: feed.id}
+                  =feed.name
+        .modal-footer
+          %button.btn.btn-default{data: {dismiss: "modal"}, :type => "button"} Close
+          %button.btn.btn-primary{type: "submit", } Remove!
+
+/Modal : Move Feed
+#move_feed.modal.fade{aria: {hidden: "true", labelledby: "myModalLabel"}, :role => "dialog", :tabindex => "-1"}
+  .modal-dialog
+    .modal-content
+      %form.form{action: '/move_feed',method: 'POST'}
+        .modal-header
+          %button.close{aria: {label: "Close"},data: {dismiss: "modal"}, type: "button"}
+            %span{aria: {hidden: "true"}} ×
+          %h4#myModalLabel.modal-title Move Feed to another category.
+        .modal-body
+          Feed:
+          %select.form-control{name: 'feed_id'}
+            - @categories.each do |category|
+              - category.feeds.each do|feed|
+                %option{value: feed.id}
+                  =feed.name
+          Move to :
+          %select.form-control{name: 'category_id'}
+            - @categories.each do |category|
+              %option{value: category.id}
+                =category.name       
+        .modal-footer
+          %button.btn.btn-default{data: {dismiss: "modal"}, :type => "button"} Close
+          %button.btn.btn-primary{type: "submit", } Move it!
+
+
+
+

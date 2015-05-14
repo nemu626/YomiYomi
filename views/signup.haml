@@ -1,0 +1,14 @@
+.container
+  %form.form-signin{action: '/signup',method: 'post'}
+    %h2.form-signin-heading Register
+    %label.sr-only{for: 'inputEmail'}UserID(E-mail form)
+    %input.form-control#inputEmail{name: 'email', type: 'email',placeholder: 'Email Address'}
+    %label.sr-only{for: 'inputPassword'}Password
+    %input.form-control#inputPassword{name: 'password', type: 'password',placeholder: 'Password(英数字、特殊記号)'}
+    %label.sr-only{for: 'inputPasswordconfirmation'}Password confirmation
+    %input.form-control#inputPassword{name: 'password_confirmation', type: 'password',placeholder: 'Password(英数字、特殊記号)'}
+
+    %label.sr-only{for: 'inpuName'}Your Name
+    %input.form-control#inputName{name: 'name', type: 'name',placeholder: 'NickName'}
+
+    %button.btn.btn-lg.btn-primary.btn-block{type: 'submit', value: 'Login'} Join！
