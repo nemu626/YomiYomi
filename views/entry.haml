@@ -21,7 +21,7 @@
             - unless category.feeds.blank?
               .sublinks.collapse{id: 'category_feeds' + category.id.to_s}
                 - category.feeds.each do |feed|
-                  %a.list-group-item.small{href: '/feed/' + feed.id.to_s}
+                  %a.list-group-item.small#side_dub{href: '/feed/' + feed.id.to_s}
                     = feed.name
                     %span.glyphicon.glyphicon-chevron-right.pull-right{:style => 'color:black'}
           %li

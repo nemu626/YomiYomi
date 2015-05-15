@@ -314,10 +314,11 @@ end
 
 
 post "/signup" do
+  #Create New User
   if(User.find_by(email: params['email'])) then
     redirect '/dupemail'
   end
-  if(params['password'] != ['password_confirmation']) then
+  if(params['password'] != params['password_confirmation']) then
     redirect '/difpass'
   end
 
