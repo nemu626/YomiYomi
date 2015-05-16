@@ -9,9 +9,10 @@ require 'active_record'
 require 'warden' #login,Auth
 require 'bcrypt' #暗号化
 require 'rss'
+require 'yaml'
 require 'open-uri'
 
-set :environment, :production
+set :environment, :development
 #wardenで使用するSession有効化
 enable :sessions
 
@@ -93,9 +94,8 @@ end
 
 
 #Dababase, Active Record Setting
-ActiveRecord::Base.establish_connection(
-  "adapter" => "sqlite3",
-  "database" => "db/yomiyomiReader.db")
+ActiveRecord::Base.configurations = YAML.load_file('database.yml')
+ActiveRecord::Base.establish_connection('development')
 
 #ActiveRecordのモデル定義
 class User < ActiveRecord::Base
@@ -138,7 +138,7 @@ get '/' do
   if request.env["warden"].user.nil?
     redirect '/login'
   else
-    redirect '/all'
+    redirect '/unreaded'
   end
 end
 #Userが購読している記事を更新し, /allへ
@@ -156,6 +156,14 @@ get '/all' do
   @feeds = Feed.where(user_id: request.env["warden"].user.id)
   @page_title = "All"
   @page = 'All'
+  haml :entry
+end
+get '/unreaded' do
+  @entries = Entry.where(user_id: request.env["warden"].user.id).where(readed: false)
+  @categories = request.env["warden"].user.categories  
+  @feeds = Feed.where(user_id: request.env["warden"].user.id)
+  @page_title = "Unreaded"
+  @page = 'Unreaded'
   haml :entry
 end
 
@@ -211,7 +219,7 @@ post '/post_feed' do
     feed.category_id = params['category_id'].to_i
   end
   refreshEntry(f)
-  redirect back
+  redirect '/feed/' + f.id.to_s
 end
 
 #Category 削除
@@ -244,12 +252,28 @@ post '/move_feed' do
 
 end
 #Favorite
-get '/add_favorite/:id' do |eid|
+get '/toggle_favorite/:id' do |eid|
   entry = Entry.find(eid)
   entry.favorite = !entry.favorite?
   entry.save
 
   redirect back
+end
+
+get '/toggle_entry_readed/:id' do |eid|
+  entry = Entry.find(eid)
+  entry.readed = !entry.readed?
+  entry.save
+
+  redirect back
+end
+
+get "/read_entry/:id" do |eid|
+  entry = Entry.find(eid)
+  entry.readed = true
+  entry.save
+
+  redirect to(entry.url)
 end
 
 

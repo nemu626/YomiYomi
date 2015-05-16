@@ -10,6 +10,11 @@
               %span.glyphicon.glyphicon-home{:style =>'color:white'}
               %a{:href => '/all' } ALL
               %span.glyphicon.glyphicon-chevron-right{style: 'color:white'}
+            %li
+              %span.glyphicon.glyphicon-flash{:style =>'color:white'}
+              %a{:href => '/unreaded' } Unreaded
+              %span.glyphicon.glyphicon-chevron-right{style: 'color:white'}
+
 
           - @categories.each do |category|
             %li
@@ -77,13 +82,19 @@
                     - @entries.each do |entry|
                       %li
                         %nobr
-                          %a{href: "#{entry.url}", target: '_blank'}
+                          /Entry click 処理=> yomiyomi.js 参照
+                          %a#entry_title{href: 'read_entry/'+entry.id.to_s, target: '_blank', value: entry.id}
                             = entry.title
-                          %a#span_a{href: '/add_favorite/'+entry.id.to_s}
+                          %a#span_a{href: '/toggle_favorite/'+entry.id.to_s}
                             -if entry.favorite?
-                              %span.glyphicon.glyphicon-star.pull-right
+                              %span.glyphicon.glyphicon-star.pull-right{style:'color:yellow'}
                             -else
-                              %span.glyphicon.glyphicon-star-empty.pull-right
+                              %span.glyphicon.glyphicon-star-empty.pull-right{style:'color:yellow'}
+                          %a#span_readed{href: '/toggle_entry_readed/' + entry.id.to_s} 
+                            -if entry.readed?
+                              %span.glyphicon.glyphicon-flash.pull-right{style:'color:yellow'}
+                            -else
+                              %span.glyphicon.glyphicon-ok.pull-right{style:'color:yellow'}
 
 
                         %p
