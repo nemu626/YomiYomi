@@ -4,8 +4,9 @@ source "https://rubygems.org"
 
 # Gemfile
 gem 'sinatra'  
-gem 'activerecord'  
+
 gem 'sinatra-activerecord', :require => 'sinatra/activerecord'
+gem 'activerecord'  
 
 group :development do  
   gem 'sqlite3'
@@ -13,9 +14,8 @@ end
 
 group :production do  
   gem 'pg'
+  gem "activerecord-postgresql-adapter"
 end  
-
-gem 'sinatra'
 
 gem 'haml'
 gem 'warden'

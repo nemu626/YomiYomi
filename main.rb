@@ -276,7 +276,13 @@ get "/read_entry/:id" do |eid|
   redirect to(entry.url)
 end
 
+get '/feed/read_entry/:id' do |eid|
+  entry = Entry.find(eid)
+  entry.readed = true
+  entry.save
 
+  redirect to(entry.url)
+end
 
 
 #無効なアクセス
