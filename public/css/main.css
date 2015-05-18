@@ -4,7 +4,6 @@ body {
   padding-bottom: 0px;
   background-color: #eee;
 }
-.example{background:#555555;width:825px;border:1px #000 solid;margin:20px auto;padding:15px;-moz-border-radius: 3px;-webkit-border-radius: 3px}
 
 .entry_cell {
     margin: 5px;
@@ -27,6 +26,11 @@ body {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#555555', endColorstr='#444444',GradientType=0 ); /* IE6-9 */
     background: linear-gradient(top, #000000 0%,#222222 100%); /* W3C */
     padding: 10px;
+    max-height:170px;
+    overflow:hidden;
+    overflow-text:ellipsis;
+    white-space:nowrap;
+
 }
 .entry_cell ul li:hover{
     background: #666;
@@ -35,9 +39,24 @@ body {
     color: #fff;
     font-size: 16px;
     font-weight: bold;
-    text-align: center;
+    text-align: left;
     text-decoration: none;
     margin-bottom:5px;
+   
+
+}
+.entry_title{
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: left;
+    text-decoration: none;
+    margin-bottom:5px;
+    width : 100%;
+    display:inline-block;
+    overflow:hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .entry_cell ul li a:hover{
@@ -45,6 +64,8 @@ body {
 }
 .entry_cell ul li p {
     color: #ddd;
-    font-size: 12px;
+    font-size: 13px;
     margin: 0;
+    display:block;
+
 }

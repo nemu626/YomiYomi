@@ -3,7 +3,7 @@
 #製作者 : Kazuyoshi Yamada , 2015
 #YomiYomi Reader
 require 'sinatra'
-# require 'sinatra/reloader'
+#require 'sinatra/reloader'
 require 'rubygems'
 require 'active_record'
 require 'warden' #login,Auth
@@ -276,13 +276,6 @@ get "/read_entry/:id" do |eid|
   redirect to(entry.url)
 end
 
-get '/feed/read_entry/:id' do |eid|
-  entry = Entry.find(eid)
-  entry.readed = true
-  entry.save
-
-  redirect to(entry.url)
-end
 
 
 #無効なアクセス

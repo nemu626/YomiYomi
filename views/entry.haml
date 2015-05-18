@@ -83,7 +83,7 @@
                       %li
                         %nobr
                           /Entry click 処理=> yomiyomi.js 参照
-                          %a#entry_title{href: 'read_entry/'+entry.id.to_s, target: '_blank', value: entry.id}
+                          %a.entry_title{href: '/read_entry/'+entry.id.to_s, target: '_blank', value: entry.id}
                             = entry.title
                           %a#span_a{href: '/toggle_favorite/'+entry.id.to_s}
                             -if entry.favorite?
@@ -92,9 +92,9 @@
                               %span.glyphicon.glyphicon-star-empty.pull-right{style:'color:yellow'}
                           %a#span_readed{href: '/toggle_entry_readed/' + entry.id.to_s} 
                             -if entry.readed?
-                              %span.glyphicon.glyphicon-flash.pull-right{style:'color:yellow'}
-                            -else
                               %span.glyphicon.glyphicon-ok.pull-right{style:'color:yellow'}
+                            -else
+                              %span.glyphicon.glyphicon-flash.pull-right{style:'color:yellow'}
 
 
                         %p
